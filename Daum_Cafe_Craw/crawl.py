@@ -16,24 +16,22 @@ COMMENT = 3
 
 def make_basic_url(keyword, start, end):
     print('make_basic_url')
-    base_url = 'https://search.daum.net/search?w=blog'
+    base_url = 'https://search.daum.net/search?w=cafe'
     DA = '&DA=STC'
     enc = '&enc=utf8'
     query = '&q=' + parse.quote(keyword)
-    f = '&f=section'
-    SA = '&SA=daumsec'
-    period = '&sd=' + start + '000000' + '&ed=' + end + '235959' + '&period=u'
-    final_url = base_url + DA + enc + query + f + SA + period
+    period = '&period=u' + '&sd=' + start + '000000' + '&ed=' + end + '235959'
+    final_url = base_url + DA + enc + query + period
     return final_url
 
 def get_blog_posting_urls(keyword, start, end, driver):
-    print('get_blog_posting_urls')
+    print('get_daum_cafe_posting_urls')
     basic_url = make_basic_url(keyword, start, end)
     blog_postings = []
     index = 1
     count = 0
     flag = True
-    regex_href = r'.*http:\/\/blog\.daum\.net\/(\w*\/\d*)'
+    regex_href = r'.*http:\/\/cafe\.daum\.net\/(\w*\/\d*)'
     while(flag):
         if count == Craw_PAGE_COUNT: # 크롤 페이지 수
             flag = False
@@ -48,7 +46,6 @@ def get_blog_posting_urls(keyword, start, end, driver):
         html = driver.page_source
         bs = BeautifulSoup(html, 'html5lib')
         for single_link in bs.find("div", class_="coll_cont").find_all("a", class_="f_link_b"):
-            # single_link가 https://m.blg.naver.com을 포함하면 그걸 가져오자
             href = re.findall(regex_href, str(single_link))
             if href != None and href !=[]:
                 if href in blog_postings:
@@ -60,9 +57,9 @@ def get_blog_posting_urls(keyword, start, end, driver):
     return blog_postings
 
 def get_element(type, posting_addr, driver,PAGE_COUNT):
-    url = 'https://m.blog.daum.net/' + posting_addr[0]
+    url = 'https://m.cafe.daum.net/' + posting_addr[0]
     if PAGE_COUNT == 0:
-        print('https://m.blog.daum.net/' + posting_addr[0])
+        print('https://m.cafe.daum.net/' + posting_addr[0])
         driver.get(url)
 
     html = driver.page_source.encode('utf-8')
@@ -105,20 +102,11 @@ def get_title(bs,driver):
 
 def get_comment(bs,driver):
     result = []
-    comment_divs = None
-    comment_link = None
     try:
-        while(1):
-            comment_more=bs.find("a", class_="link_cmtmore")
-            if comment_more != None:
-                driver.find_element_by_xpath('//*[@id="comment"]/div/div/a').click()
-            else:
-                break
-
         comment_divs=bs.find("ul", class_="list_cmt")
         comment_link=comment_divs.find_all("span", class_="txt_cmt")
         for comment in comment_link:
-            if comment.text in '관리자의 승인을':
+            if comment.text == '관리자의 승인을 기다리고 있는 댓글입니다':
                 continue
             result.append(comment.text)
         return result
