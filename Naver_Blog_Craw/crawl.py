@@ -95,8 +95,8 @@ def get_text(bs,driver):
     for text in final_text_div:
         text = re.sub(r'(\<.+?\>)', '', str(text))
         if text not in text_for_blog:
-            text_for_blog += text
-    return text_for_blog
+            text_for_blog +=text.replace('&gt;','>').replace('&lt;','<').replace('&amp;','&').replace('&nbsp;','')
+    return text_for_blog.strip()
 
 def get_title(bs,driver):
     title_divs = bs.select('.se_title > .se_textView > .se_textarea')

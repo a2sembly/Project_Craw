@@ -89,8 +89,8 @@ def get_text(bs,driver):
     for text in text_divs:
         text = re.sub(r'(\<.+?\>)', '', str(text))
         if text not in text_for_blog:
-            text_for_blog += text
-    return text_for_blog.replace('&nbsp;','')
+            text_for_blog += text.replace('&gt;','>').replace('&lt;','<').replace('&amp;','&').replace('&nbsp;','')
+    return text_for_blog.strip()
 
 def get_title(bs,driver):
     title_divs = bs.select('#kakaoWrap > div.blogview_head > h2')

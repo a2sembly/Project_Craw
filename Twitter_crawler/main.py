@@ -2,7 +2,15 @@ from crawl import *
 from settings import *
 import time
 
-driver = webdriver.Chrome(WEB_DRIVER_PATH)
+option = Options()
+
+option.add_argument("--disable-infobars")
+option.add_argument("start-maximized")
+option.add_argument("--disable-extensions")
+
+# Pass the argument 1 to allow and 2 to block
+option.add_experimental_option("prefs", {"profile.default_content_setting_values.notifications": 1})
+driver = webdriver.Chrome(chrome_options=option, executable_path=WEB_DRIVER_PATH)
 index = 0
 time.sleep(1)
 for start_date, end_date, dining_name in zip(START_DATE, END_DATE, DINING_NAME,):
