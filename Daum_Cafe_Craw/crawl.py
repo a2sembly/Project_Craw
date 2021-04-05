@@ -15,7 +15,6 @@ TEXT = 2
 COMMENT = 3
 
 def make_basic_url(keyword, start, end):
-    print('make_basic_url')
     base_url = 'https://search.daum.net/search?w=cafe'
     DA = '&DA=STC'
     enc = '&enc=utf8'
@@ -25,44 +24,44 @@ def make_basic_url(keyword, start, end):
     return final_url
 
 def get_blog_posting_urls(keyword, start, end, driver):
-    print('get_daum_cafe_posting_urls')
     basic_url = make_basic_url(keyword, start, end)
     blog_postings = []
     index = 1
     count = 0
     flag = True
-    regex_href = r'.*http:\/\/cafe\.daum\.net\/(\w*\/\d*)'
     while(flag):
         if count == Craw_PAGE_COUNT: # 크롤 페이지 수
             flag = False
             break;
         else:
-            print(count)
             count += 1
         # index에 해당하는 url
-        url = basic_url + '&page=' + str(index)
+        url = basic_url + '&p=' + str(index)
         driver.implicitly_wait(1)
         driver.get(url)
         html = driver.page_source
         bs = BeautifulSoup(html, 'html5lib')
         for single_link in bs.find("div", class_="coll_cont").find_all("a", class_="f_link_b"):
-            href = re.findall(regex_href, str(single_link))
+            href = single_link['href']
             if href != None and href !=[]:
                 if href in blog_postings:
                     break;
                 else:
                     blog_postings.append(href)
-                    print(href)
         index += 1
     return blog_postings
 
 def get_element(type, posting_addr, driver,PAGE_COUNT):
-    url = 'https://m.cafe.daum.net/' + posting_addr[0]
+    url = posting_addr
     if PAGE_COUNT == 0:
-        print('https://m.cafe.daum.net/' + posting_addr[0])
+        print(posting_addr)
         driver.get(url)
+        driver.implicitly_wait(1)
+        frame = driver.find_element_by_id("down")
+        driver.switch_to.frame(frame)
 
-    html = driver.page_source.encode('utf-8')
+    time.sleep(1)
+    html = driver.page_source
     bs = BeautifulSoup(html, 'html5lib', from_encoding='utf-8')
 
     switcher = {
@@ -74,37 +73,37 @@ def get_element(type, posting_addr, driver,PAGE_COUNT):
     return switcher.get(type)(bs,driver)
 
 def get_date(bs,driver):
-    date_divs = bs.select('#mArticle > div > div.blogview_info > time')
-    date = re.findall(r'(20[\d\s\.\:]*)', str(date_divs))
-    try:
-        return date[0]
-    except IndexError:
-        return None
+    for date_spans in bs.find_all("span", class_="txt_item")[2]:
+        try:
+            return date_spans.string
+        except IndexError:
+            return None
 
 def get_text(bs,driver):
     # 네이버는 에디터에 따라 css selctor가 달라진다
-    text_divs = bs.select('#mArticle > div > div.blogview_content.useless_p_margin')
-
+    #user_contents
+    text_divs = bs.find("div", class_="board_post tx-content-container")
     text_for_blog = ''
     for text in text_divs:
         text = re.sub(r'(\<.+?\>)', '', str(text))
         if text not in text_for_blog:
             text_for_blog += text.replace('&gt;','>').replace('&lt;','<').replace('&amp;','&').replace('&nbsp;','')
-    return text_for_blog.strip()
+    return text_for_blog.strip().replace('document.write(removeRestrictTag());','')
 
 def get_title(bs,driver):
-    title_divs = bs.select('#kakaoWrap > div.blogview_head > h2')
-    if title_divs == []:
-        title_divs = bs.select('#mArticle > div > div.blogview_tit > h2')
-    for title in title_divs:
-        final_title = re.sub(r'(\s\s[\s]+)', '', str(title.text))
-        return final_title
+    try:
+        for title_divs in bs.find_all("div", class_="bbs_read_tit").find("strong", class_="tit_info"):
+            for title in title_divs:
+                final_title = re.sub(r'(\s\s[\s]+)', '', str(title.text))
+                return final_title
+    except:
+        return None
 
 def get_comment(bs,driver):
     result = []
     try:
-        comment_divs=bs.find("ul", class_="list_cmt")
-        comment_link=comment_divs.find_all("span", class_="txt_cmt")
+        comment_divs=bs.find("div", class_="comment_view")
+        comment_link=comment_divs.find_all("span", class_="original_comment")
         for comment in comment_link:
             if comment.text == '관리자의 승인을 기다리고 있는 댓글입니다':
                 continue

@@ -7,3 +7,8 @@ START_DATE = ['2021-03-24']
 END_DATE =   ['2021-03-25']
 DINING_NAME = ['아티장베이커리']
 XLSX_PATH = os.path.dirname(os.path.abspath(__file__)) + str(START_DATE) + '_' + str(END_DATE) + '_' + str(DINING_NAME) + '.csv'
+
+def alert(str):
+    print("--------------------------------------------------------------------------------")
+    print(str)
+    print("--------------------------------------------------------------------------------")

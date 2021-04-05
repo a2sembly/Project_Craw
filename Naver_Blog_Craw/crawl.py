@@ -15,7 +15,6 @@ TEXT = 2
 COMMENT = 3
 
 def make_basic_url(keyword, start, end):
-    print('make_basic_url')
     base_url = 'https://m.search.naver.com/search.naver?display=15&nso=p%3A'
     period = 'from' + start + 'to' + end
     query = '&query=' + parse.quote(keyword)
@@ -24,7 +23,6 @@ def make_basic_url(keyword, start, end):
     return final_url
 
 def get_blog_posting_urls(keyword, start, end, driver):
-    print('get_blog_posting_urls')
     basic_url = make_basic_url(keyword, start, end)
     blog_postings = []
     index = 1
@@ -36,7 +34,6 @@ def get_blog_posting_urls(keyword, start, end, driver):
             flag = False
             break;
         else:
-            print(count)
             count += 1
         # index에 해당하는 url
         url = basic_url + str(index)
@@ -52,7 +49,6 @@ def get_blog_posting_urls(keyword, start, end, driver):
                     break;
                 else:
                     blog_postings.append(href)
-                    print(href)
         index += 15
     return blog_postings
 
@@ -61,7 +57,7 @@ def get_element(type, posting_addr, driver,PAGE_COUNT):
     if PAGE_COUNT == 0:
         print('https://m.blog.naver.com/' + posting_addr[0])
         driver.get(url)
-
+    time.sleep(1)
     html = driver.page_source.encode('utf-8')
     bs = BeautifulSoup(html, 'html5lib', from_encoding='utf-8')
 
@@ -96,7 +92,7 @@ def get_text(bs,driver):
         text = re.sub(r'(\<.+?\>)', '', str(text))
         if text not in text_for_blog:
             text_for_blog +=text.replace('&gt;','>').replace('&lt;','<').replace('&amp;','&').replace('&nbsp;','')
-    return text_for_blog.strip()
+    return text_for_blog.strip().replace('본문 기타 기능본문 폰트 크기 작게 보기본문 폰트 크기 크게 보기가','').replace('로그인이 필요합니다.ⓒ NAVER Corp.','')
 
 def get_title(bs,driver):
     title_divs = bs.select('.se_title > .se_textView > .se_textarea')

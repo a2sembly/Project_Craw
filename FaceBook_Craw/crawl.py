@@ -17,7 +17,6 @@ TEXT = 2
 
 def make_basic_url(keyword, start, end):
     '''{"rp_creation_time:0":"{\"name\":\"creation_time\",\"args\":\"{\\\"start_day\\\":\\\"2020-1-1\\\",\\\"end_day\\\":\\\"2020-1-2\\\"}\"}"}'''
-    print('make_basic_url')
     base_url = 'https://www.facebook.com/search/posts?'
     query = 'q=' + parse.quote(keyword)
     filter_= '{"rp_creation_time:0":"{\\"name\\":\\"creation_time\\",\\"args\\":\\"{\\\\\\\"start_day\\\\\\\":\\\\\\\"' + start + '\\\\\\\",\\\\\\\"end_day\\\\\\\":\\\\\\\"' + end + '\\\\\\\"}\\"}"}'
@@ -72,19 +71,18 @@ def Facebook_postings_urls(keyword, start, end, driver,title_list,date_list):
         title = single_link.findAll('a', {'role': 'link'})[0].string
         if title != None and title !=[]:
             title_list.append(title)
-            print(title)
 
         if href != None and href !=[]:
             if href in blog_postings:
                 continue;
             else:
                 blog_postings.append(href)
-                print(href)
     return blog_postings
 # #jsc_c_5f > span:nth-child(2) > span > a > span > span > b > b:nth-child(4)
 # #mount_0_0_JY > div > div:nth-child(1) > div > div.rq0escxv.l9j0dhe7.du4w35lb > div > div > div.j83agx80.cbu4d94t.d6urw2fd.dp1hu0rb.l9j0dhe7.du4w35lb > div:nth-child(1) > div > div.rq0escxv.l9j0dhe7.du4w35lb.j83agx80.cbu4d94t.pfnyh3mw.d2edcug0.hpfvmrgz.hybvsw6c.gitj76qy.dp1hu0rb.kelwmyms.dzul8kyi.e69mrdg2 > div > div > div > div.j83agx80.cbu4d94t.buofh1pr.l9j0dhe7 > div.dati1w0a.f10w8fjw.hv4rvrfc.discj3wi > div:nth-child(1) > div.btwxx1t3.j83agx80.hybvsw6c.ll8tlv6m > div.buofh1pr > div > div:nth-child(2) > span > span > span:nth-child(2) > span > a > span > span > b > b:nth-child(22)
 def get_element(type, posting_addr, driver,PAGE_COUNT):
     if PAGE_COUNT == 0:
+        print(posting_addr.replace('www','m'))
         driver.get(posting_addr.replace('www','m'))
 
     html = driver.page_source.encode('utf-8')

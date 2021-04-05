@@ -70,12 +70,14 @@ def get_cafe_posting_urls(keyword, start, end, driver):
         index += 15
     return cafe_postings
 
-def get_element(type, posting_addr, driver):
+def get_element(type, posting_addr, driver,PAGE_COUNT):
     url = posting_addr
-
-    driver.get(url)
-    driver.implicitly_wait(5)
-    time.sleep(1.5)
+    if PAGE_COUNT == 0:
+        print(url)
+        driver.get(url)
+        driver.implicitly_wait(5)
+        
+    time.sleep(1)   
     html = driver.page_source.encode('utf-8')
     bs = BeautifulSoup(html, 'html5lib', from_encoding='utf-8')
 
@@ -91,7 +93,6 @@ def get_date(bs):
     date_divs = bs.select('#ct > div:nth-child(1) > div > div.user_wrap > div:nth-child(3) > span.date.font_l')
     try:
         date = re.findall(r'(20[\d\s\.\:]*)', str(date_divs))[0]
-        print(date)
         return date
     except:
         return None
@@ -100,7 +101,6 @@ def get_title(bs):
     try:
         title_divs = bs.select('#ct > div:nth-child(1) > div > h2')
         title = title_divs[0].text.replace('\n        ','')
-        print(title)
         return title
     except:
         return None
@@ -109,7 +109,6 @@ def get_text(bs):
     try:
         post_divs = bs.select('#postContent')
         post = post_divs[0].text.split("투표")[0]
-        print(post)
         return post
     except:
         return None
@@ -121,7 +120,6 @@ def get_comment(bs):
             # ('a', {'class': 'api_txt_lines total_tit'}):
             for comment in comment_uls.findAll('p', {'class': 'txt'}):
                 result.append(comment['v-if'])
-                print(comment['v-if'])
         
         return result
     except:

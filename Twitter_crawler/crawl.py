@@ -6,8 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.common import exceptions
 import time
-from settings import Twitter_id
-from settings import Twitter_pw
+from settings import *
 import csv
 
 

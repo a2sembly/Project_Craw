@@ -15,7 +15,6 @@ TEXT = 2
 COMMENT = 3
 
 def make_basic_url(keyword, start, end):
-    print('make_basic_url')
     base_url = 'https://search.daum.net/search?w=blog'
     DA = '&DA=STC'
     enc = '&enc=utf8'
@@ -27,7 +26,6 @@ def make_basic_url(keyword, start, end):
     return final_url
 
 def get_blog_posting_urls(keyword, start, end, driver):
-    print('get_blog_posting_urls')
     basic_url = make_basic_url(keyword, start, end)
     blog_postings = []
     index = 1
@@ -55,7 +53,6 @@ def get_blog_posting_urls(keyword, start, end, driver):
                     break;
                 else:
                     blog_postings.append(href)
-                    print(href)
         index += 1
     return blog_postings
 
@@ -64,6 +61,7 @@ def get_element(type, posting_addr, driver,PAGE_COUNT):
     if PAGE_COUNT == 0:
         print('https://m.blog.daum.net/' + posting_addr[0])
         driver.get(url)
+        time.sleep(1)
 
     html = driver.page_source.encode('utf-8')
     bs = BeautifulSoup(html, 'html5lib', from_encoding='utf-8')
