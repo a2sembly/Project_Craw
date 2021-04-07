@@ -1,8 +1,19 @@
 from crawl import *
 from settings import *
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
-print(WEB_DRIVER_PATH)
-driver = webdriver.Chrome(WEB_DRIVER_PATH)
+option = Options()
+option.add_argument("headless")
+option.add_argument("--disable-gpu")
+option.add_argument("lang=ko_KR")
+option.add_argument("--disable-infobars")
+option.add_argument("start-maximized")
+option.add_argument("--disable-extensions")
+
+# Pass the argument 1 to allow and 2 to block
+option.add_experimental_option("prefs", {"profile.default_content_setting_values.notifications": 1})
+driver = webdriver.Chrome(chrome_options=option, executable_path=WEB_DRIVER_PATH)
 index = 0
 PAGE_COUNT = 0
 total_list = []

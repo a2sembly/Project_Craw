@@ -5,7 +5,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 option = Options()
-
+option.add_argument("headless")
+option.add_argument("--disable-gpu")
+option.add_argument("lang=ko_KR")
 option.add_argument("--disable-infobars")
 option.add_argument("start-maximized")
 option.add_argument("--disable-extensions")

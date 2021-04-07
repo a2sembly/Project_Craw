@@ -5,7 +5,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 import time
 import re
-from settings import WEB_DRIVER_PATH
+from settings import *
 import xlwt
 import pyperclip
 import csv
@@ -23,6 +23,7 @@ def copy_input(xpath, input,driver):
     time.sleep(1)
 
 def login_naver(id,pw,driver):
+    alert('[+] Login Naver')
     driver.get('https://nid.naver.com/nidlogin.login?mode=form&url=https%3A%2F%2Fwww.naver.com')
     time.sleep(1)
 
@@ -33,6 +34,7 @@ def login_naver(id,pw,driver):
     driver.find_element_by_xpath('//*[@id="frmNIDLogin"]/fieldset/input').click()
     time.sleep(1)
     driver.find_element_by_xpath('//*[@id="new.dontsave"]').click()
+    
 def make_basic_url(keyword, start, end):
     base_url = 'https://m.search.naver.com/search.naver?display=15&nso=p%3A'
     period = 'from' + start + 'to' + end
