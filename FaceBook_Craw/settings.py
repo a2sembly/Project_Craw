@@ -1,8 +1,8 @@
 import os
 
 WEB_DRIVER_PATH = 'C:\chromedriver.exe'
-Facebook_id = '01045299351'
-Facebook_pw = 'dltmdgud9351!@'
+Facebook_id = ''
+Facebook_pw = ''
 START_DATE = ['2021-03-24']
 END_DATE =   ['2021-03-25']
 DINING_NAME = ['아티장베이커리']

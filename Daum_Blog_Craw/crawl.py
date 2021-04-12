@@ -15,10 +15,15 @@ TEXT = 2
 COMMENT = 3
 
 def make_basic_url(keyword, start, end):
+    query = '&q='
     base_url = 'https://search.daum.net/search?w=blog'
     DA = '&DA=STC'
     enc = '&enc=utf8'
-    query = '&q=' + parse.quote(keyword)
+    if isinstance(keyword,tuple):
+        for key in keyword:
+            query += parse.quote(key) + ","
+    else:
+        query += parse.quote(keyword)
     f = '&f=section'
     SA = '&SA=daumsec'
     period = '&sd=' + start + '000000' + '&ed=' + end + '235959' + '&period=u'

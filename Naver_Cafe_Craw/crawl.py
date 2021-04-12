@@ -36,11 +36,18 @@ def login_naver(id,pw,driver):
     driver.find_element_by_xpath('//*[@id="new.dontsave"]').click()
     
 def make_basic_url(keyword, start, end):
+    query = '&query='
+    oquery = '&oquery='
     base_url = 'https://m.search.naver.com/search.naver?display=15&nso=p%3A'
     period = 'from' + start + 'to' + end
-    query = '&query=' + parse.quote(keyword)
+    if isinstance(keyword,tuple):
+        for key in keyword:
+            query +=  "\"" + parse.quote(key) + "\"" + "+"
+            oquery += parse.quote(key) + ","
+    else:
+        query += parse.quote(keyword)
     end = '&where=m_article&start='
-    final_url = base_url + period + query + end
+    final_url = base_url + period + query + oquery + end
     return final_url
 
 def get_cafe_posting_urls(keyword, start, end, driver):

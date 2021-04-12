@@ -1,8 +1,8 @@
 import os
 
 WEB_DRIVER_PATH = 'C:\chromedriver.exe'
-Twitter_id = "lee_seunghyeong"
-Twitter_pw = "dltmdgud9351!@"
+Twitter_id = ""
+Twitter_pw = ""
 START_DATE = ['2020-07-01']
 END_DATE =   ['2020-07-02']
 DINING_NAME = ['베이커리']

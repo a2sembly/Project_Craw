@@ -15,10 +15,15 @@ TEXT = 2
 COMMENT = 3
 
 def make_basic_url(keyword, start, end):
+    query = '&q='
     base_url = 'https://search.daum.net/search?w=cafe'
     DA = '&DA=STC'
     enc = '&enc=utf8'
-    query = '&q=' + parse.quote(keyword)
+    if isinstance(keyword,tuple):
+        for key in keyword:
+            query += parse.quote(key) + ","
+    else:
+        query += parse.quote(keyword)
     period = '&period=u' + '&sd=' + start + '000000' + '&ed=' + end + '235959'
     final_url = base_url + DA + enc + query + period
     return final_url
